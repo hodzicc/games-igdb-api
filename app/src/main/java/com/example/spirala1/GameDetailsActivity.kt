@@ -23,6 +23,7 @@ class GameDetailsActivity : AppCompatActivity() {
     private lateinit var genre: TextView
     private lateinit var description: TextView
     private lateinit var home: Button
+    private lateinit var details: Button
     private lateinit var userImpressions: RecyclerView
     private lateinit var impressionsListAdapter: ImpressionsListAdapter
 
@@ -39,6 +40,8 @@ class GameDetailsActivity : AppCompatActivity() {
         genre = findViewById(R.id.genre_textview)
         description = findViewById(R.id.description_textview)
         home = findViewById(R.id.home_button)
+        details = findViewById(R.id.details_button)
+        details.isEnabled=false
         home.setOnClickListener{
             showHome()
         }

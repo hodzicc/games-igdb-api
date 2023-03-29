@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         gameListAdapter = GamesListAdapter(arrayListOf()) { game ->
             showGameDetails(game)
         }
-
+        home_button.isEnabled=false
         game_list.adapter = gameListAdapter
         gameListAdapter.updateGames(lista)
         val extras = intent.extras
