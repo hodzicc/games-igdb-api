@@ -48,8 +48,8 @@ class GameDetailsActivity : AppCompatActivity() {
         } else {
             finish()
         }
-    var userImpressionsList = game.userImpressions
-        userImpressionsList.sortedByDescending { it.timestamp }
+    var userImpressionsList = game.userImpressions.sortedByDescending { it.timestamp }
+
     userImpressions = findViewById(R.id.reviews_list)
     userImpressions.layoutManager = LinearLayoutManager(
         this,
