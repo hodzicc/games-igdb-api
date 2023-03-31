@@ -88,7 +88,7 @@ private fun getGameByTitle(name:String):Game{
 return game
 }
     private fun showHome() {
-        val intent = Intent(this, MainActivity::class.java).apply {
+        val intent = Intent(this, HomeActivity::class.java).apply {
             putExtra("game_title", game.title)
         }
         startActivity(intent)

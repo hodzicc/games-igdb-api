@@ -34,6 +34,6 @@ class GamesListAdapter(
         val gameTitle: TextView = itemView.findViewById(R.id.game_title_textview)
         val gameRating: TextView = itemView.findViewById(R.id.game_rating_textview)
         val gamePlatform: TextView = itemView.findViewById(R.id.game_platform_textview)
-        val gameRelease: TextView = itemView.findViewById(R.id.game_release_date_textview)
+        val gameRelease: TextView = itemView.findViewById(R.id.release_date)
     }
 }

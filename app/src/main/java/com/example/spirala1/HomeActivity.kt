@@ -1,7 +1,6 @@
 package com.example.spirala1
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.spirala1.GameData.Companion.GetDetails
 import com.example.spirala1.GameData.Companion.getAll
 
-class MainActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
     private lateinit var game1: Game
     private lateinit var home_button: Button
     private lateinit var details_button: Button
@@ -47,6 +46,8 @@ class MainActivity : AppCompatActivity() {
                 showGameDetails(game1)
             }
         }
+
+        else details_button.isEnabled=false
 
     }
 

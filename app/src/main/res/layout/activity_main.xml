@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="10dp"
-    tools:context=".MainActivity">
+    tools:context=".HomeActivity">
 
     <LinearLayout
         android:id="@+id/lin1"
@@ -15,14 +15,14 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/search_query_edittext"
+        app:layout_constraintBottom_toTopOf="@id/lin2"
         >
     <ImageView
         android:layout_width="0dp"
         android:layout_weight="2"
         android:id="@+id/logo_image"
         android:layout_height="93dp"
-        android:layout_marginTop="16dp"
+
         app:layout_constraintBottom_toTopOf="@+id/search_query_edittext"
         app:layout_constraintRight_toLeftOf="@id/home_button"
         app:layout_constraintHorizontal_bias="0.051"
@@ -37,7 +37,7 @@
         android:id="@+id/home_button"
 
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+
         android:text="HOME"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/search_query_edittext"
@@ -52,7 +52,7 @@
     <Button
         android:id="@+id/details_button"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+
         android:orientation="vertical"
         android:text="Details"
         android:layout_width="0dp"
@@ -60,41 +60,53 @@
         app:layout_constraintBottom_toBottomOf="@+id/home_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/home_button"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/home_button"
         app:layout_constraintVertical_bias="0.0" />
     </LinearLayout>
-    <EditText
-        android:id="@+id/search_query_edittext"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:ems="10"
-        android:hint="Game"
-        android:inputType="textPersonName"
-        android:orientation="vertical"
-        app:layout_constraintRight_toLeftOf="@id/search_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lin1"
-        app:layout_constraintBottom_toTopOf="@id/game_list"
-        />
-
-    <Button
-        android:id="@+id/search_button"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/lin2"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="32dp"
-        android:orientation="vertical"
-        android:text="SEARCH"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/search_query_edittext"
-        app:layout_constraintTop_toBottomOf="@id/lin1"
+        app:layout_constraintTop_toBottomOf="@+id/lin1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@id/game_list"
-        />
+        >
+        <EditText
+            android:id="@+id/search_query_edittext"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:ems="10"
+            android:hint="Game"
+            android:inputType="textPersonName"
+            android:orientation="vertical"
+            app:layout_constraintRight_toLeftOf="@id/search_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lin1"
+            app:layout_constraintBottom_toTopOf="@id/game_list"
+            />
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="52dp"
+            android:orientation="vertical"
+            android:text="SEARCH"
+            app:layout_constraintBottom_toTopOf="@id/game_list"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.238"
+            app:layout_constraintStart_toEndOf="@+id/search_query_edittext"
+            app:layout_constraintTop_toTopOf="@id/search_query_edittext"
+            app:layout_constraintVertical_bias="1.0" />
+
+    </LinearLayout>
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/game_list"
@@ -103,5 +115,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_query_edittext" />
+        app:layout_constraintTop_toBottomOf="@id/lin2" />
 </androidx.constraintlayout.widget.ConstraintLayout>
