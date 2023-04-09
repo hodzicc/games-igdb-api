@@ -7,7 +7,7 @@ class GameData {
                 UserReview(
                     "sword_robber2",
                     1679959758,
-                    "this game is a lot better than pubg not too much violence"
+                    "This game is a lot better than pubg not too much violence"
                 ),
                 UserReview(
                     "Acalodo",
