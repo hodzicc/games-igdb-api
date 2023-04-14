@@ -31,9 +31,17 @@ class GamesListAdapter(
         notifyDataSetChanged()
     }
     inner class GamesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        /*
+
         val gameTitle: TextView = itemView.findViewById(R.id.game_title_textview)
         val gameRating: TextView = itemView.findViewById(R.id.game_rating_textview)
         val gamePlatform: TextView = itemView.findViewById(R.id.game_platform_textview)
-        val gameRelease: TextView = itemView.findViewById(R.id.release_date)
+        val gameRelease: TextView = itemView.findViewById(R.id.game_release_date_textview)
+
+         */
+        val gameTitle by lazy { itemView.findViewById<TextView>(R.id.game_title_textview) }
+        val gameRating by lazy { itemView.findViewById<TextView>(R.id.game_rating_textview) }
+        val gamePlatform by lazy { itemView.findViewById<TextView>(R.id.game_platform_textview) }
+        val gameRelease by lazy { itemView.findViewById<TextView>(R.id.game_release_date_textview) }
     }
 }

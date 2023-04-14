@@ -1,64 +1,130 @@
 package com.example.spirala1
 
-import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.spirala1.GameData.Companion.GetDetails
-import com.example.spirala1.GameData.Companion.getAll
+import android.view.MenuItem
+import androidx.activity.viewModels
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.onNavDestinationSelected
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.spirala1.HomeFragment
 
 class HomeActivity : AppCompatActivity() {
-    private lateinit var game1: Game
-    private lateinit var home_button: Button
-    private lateinit var details_button: Button
-    private lateinit var search_button: Button
-    private lateinit var game_list: RecyclerView
-    private val lista = getAll()
-    private lateinit var gameListAdapter: GamesListAdapter
+    private lateinit var navController: NavController
+    private lateinit var fragmentManager: FragmentManager
+    private lateinit var bottomNav: BottomNavigationView
+    private val sharedViewModel: SharedViewModel by viewModels()
 
-    @SuppressLint("SuspiciousIndentation")
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+            super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        home_button = findViewById(R.id.home_button)
-        details_button = findViewById(R.id.details_button)
-        search_button = findViewById(R.id.search_button)
-        game_list = findViewById(R.id.game_list)
-        game_list.layoutManager = LinearLayoutManager(
-            this,
-            LinearLayoutManager.VERTICAL,
-            false
-        )
-        gameListAdapter = GamesListAdapter(arrayListOf()) { game ->
-            showGameDetails(game)
+
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.details_container, GameDetailsFragment())
+                .add(R.id.home_container, HomeFragment())
+                .commit()
         }
-        home_button.isEnabled=false
-        game_list.adapter = gameListAdapter
-        gameListAdapter.updateGames(lista)
-        val extras = intent.extras
-        if (extras != null) {
-            game1 = getGameByTitle(extras.getString("game_title", ""))
-            if(game1.title!="Test")
-            details_button.setOnClickListener {
-                showGameDetails(game1)
+        else{
+            val navHostFragment =
+                supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            navController = navHostFragment.navController
+
+            val navView = findViewById<BottomNavigationView>(R.id.bottomNavigation)
+            navView.setupWithNavController(navController)
+
+            var currentFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+
+
+
+
+        sharedViewModel.isGameDetailsOpened.observe(this) { isOpened ->
+            if (isOpened) {
+                navView.menu.findItem(R.id.gameDetailsItem).isEnabled = true
+                navView.menu.findItem(R.id.gameDetailsItem)
+                    .setOnMenuItemClickListener {
+                        val currentFragment1 = navHostFragment?.childFragmentManager?.fragments?.last()
+                        if(currentFragment1 is HomeFragment) {
+                            val gametitle1 = sharedViewModel.gametitle.value ?: ""
+                            val action = HomeFragmentDirections.homeToDetails(gametitle1)
+                            navController.navigate(action)
+                        }
+                        true
+                    }
+            } else {
+                navView.menu.findItem(R.id.gameDetailsItem).isEnabled = false
+                navView.menu.findItem(R.id.gameDetailsItem).setOnMenuItemClickListener(null)
+            }
+        }
+        }
+
+        sharedViewModel.gametitle.observe(this) { gametitle ->
+            if (gametitle.isNotEmpty()) {
+                if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    val bundle = Bundle().apply {
+                        putString("message", gametitle)
+                    }
+                    val fragment = GameDetailsFragment()
+                    fragment.arguments = bundle
+                    supportFragmentManager.beginTransaction()
+                        .add(R.id.details_container, fragment)
+                        .add(R.id.home_container, HomeFragment())
+                        .commit()
+                } else {
+                    val navHostFragment =
+                        supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                    val currentFragment1 = navHostFragment?.childFragmentManager?.fragments?.last()
+                    if(currentFragment1 is HomeFragment) {
+                        val action = HomeFragmentDirections.homeToDetails(gametitle)
+                        navController.navigate(action)
+                    }
+
+                }
+            }
+            else{
+                if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    val bundle = Bundle().apply {
+                        putString("gameTitle", "Fortnite")
+                    }
+                    val fragment = GameDetailsFragment()
+                    fragment.arguments = bundle
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.details_container, fragment)
+                        .commit()
+                }
             }
         }
 
-        else details_button.isEnabled=false
+
+
 
     }
 
-    private fun getGameByTitle(name:String):Game{
-        game1 = GetDetails(name)
-        return game1
-    }
-    private fun showGameDetails(game: Game) {
-        val intent = Intent(this, GameDetailsActivity::class.java).apply {
-            putExtra("game_title", game.title)
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.details_container, GameDetailsFragment())
+                .replace(R.id.home_container, HomeFragment())
+                .commit()
         }
-        startActivity(intent)
     }
+
+
+
+
 }
+
+

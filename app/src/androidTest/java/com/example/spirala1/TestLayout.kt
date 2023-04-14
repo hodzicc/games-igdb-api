@@ -55,7 +55,7 @@ class TestLayout {
         onView(withId(R.id.game_list)).perform(RecyclerViewActions.scrollToPosition<ViewHolder>(0)).check(matches(allOf(
             hasDescendant(withId(R.id.game_title_textview)),
             hasDescendant(withId(R.id.game_rating_textview)),
-            hasDescendant(withId(R.id.release_date)),
+            hasDescendant(withId(R.id.game_release_date_textview)),
             hasDescendant(withId(R.id.game_platform_textview)),
             hasDescendant(withId(R.id.game_rating_textview))
         )))

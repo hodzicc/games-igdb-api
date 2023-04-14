@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.spirala1.GameData.Companion.GetDetails
 
 class GameDetailsActivity : AppCompatActivity() {
+    /*
     private lateinit var game: Game
     private lateinit var title: TextView
     private lateinit var img: ImageView
@@ -94,5 +95,7 @@ return game
         startActivity(intent)
     }
 
+
+     */
 
 }
