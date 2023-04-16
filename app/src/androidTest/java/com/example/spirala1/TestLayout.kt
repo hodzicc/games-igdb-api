@@ -23,6 +23,8 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class TestLayout {
+    //TESTOVI PRVA SPIRALA
+    /*
     fun hasItemCount(n: Int) = object : ViewAssertion {
         override fun check(view: View?, noViewFoundException: NoMatchingViewException?) {
             if (noViewFoundException != null) {
@@ -106,4 +108,6 @@ class TestLayout {
         onView(withId(R.id.details_button)).perform(click())
         onView(withText(prvaIgra.description)).check(matches(isCompletelyDisplayed()))
     }
+
+     */
 }

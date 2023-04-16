@@ -71,7 +71,7 @@ class GameDetailsFragment : Fragment() {
         val args = arguments
         var message = args?.getString("message")
         if (message != null) {
-            sharedViewModel.isGameDetailsOpened.value=true
+        //    sharedViewModel.isGameDetailsOpened.value=true
         }
         else message = "Fortnite"
 
@@ -83,7 +83,7 @@ class GameDetailsFragment : Fragment() {
             userImpressions = view.findViewById(R.id.reviews_list)
             userImpressions.layoutManager = LinearLayoutManager(
                 activity,
-                LinearLayoutManager.HORIZONTAL,
+                LinearLayoutManager.VERTICAL,
                 false
             )
 

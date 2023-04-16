@@ -28,9 +28,16 @@
         android:name="com.example.spirala1.GameDetailsFragment"
         android:label="fragment_game_details"
         tools:layout="@layout/fragment_game_details">
-    <argument
-        android:name="message"
-        app:argType="string" />
+        <action
+        android:id="@+id/gameToHome"
+        app:destination="@id/homeItem"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/bottom_nav"
+            app:popUpToInclusive="true"
+            app:popUpToSaveState="true"
+            />
+
     </fragment>
+
 
 </navigation>

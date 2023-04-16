@@ -5,6 +5,7 @@ plugins {
 }
 
 android {
+
     namespace 'com.example.spirala1'
     compileSdk 33
 
@@ -19,6 +20,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
     }
 
     buildTypes {
@@ -52,5 +54,7 @@ dependencies {
     testImplementation("org.hamcrest:hamcrest:2.2")
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.5.1'
     androidTestImplementation 'androidx.test:core-ktx:1.5.0'
+    androidTestImplementation("androidx.navigation:navigation-testing:2.4.1")
+    debugImplementation "androidx.fragment:fragment-testing:1.5.6"
 
 }
