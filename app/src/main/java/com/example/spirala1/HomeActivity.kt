@@ -1,5 +1,6 @@
 package com.example.spirala1
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
@@ -28,17 +29,13 @@ class HomeActivity : AppCompatActivity() {
 
 
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             temp=sharedViewModel.gametitle.value
-            if(temp=="") {
-                temp = "Fortnite"
-                sharedViewModel.empty.value=true
-            }
-            else sharedViewModel.empty.value=false
            sharedViewModel.gametitle.value=temp
         }
         else{
@@ -52,18 +49,10 @@ class HomeActivity : AppCompatActivity() {
 
             var currentFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
 
-           // sharedViewModel.gametitle.value=""
-            if(sharedViewModel.empty.value==true)
-                temp = ""
-            else
+
             temp=sharedViewModel.gametitle.value
 
             sharedViewModel.gametitle.value=temp
-
-            //println("shhh")
-            println(sharedViewModel.gametitle.value)
-
-            
 
 
         sharedViewModel.isGameDetailsOpened.observe(this) { isOpened ->
@@ -86,13 +75,15 @@ class HomeActivity : AppCompatActivity() {
 
             }
         }
+
+
         }
 
         sharedViewModel.gametitle.observe(this) { gametitle ->
             if (gametitle!="") {
                //
                 if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                  //  println("uso u gametitle")
+
                     val bundle = Bundle().apply {
                         putString("message", gametitle)
                     }
@@ -102,14 +93,21 @@ class HomeActivity : AppCompatActivity() {
                         .replace(R.id.details_container, fragment)
                         .replace(R.id.home_container, HomeFragment())
                         .commit()
+
+                    sharedViewModel.isGameDetailsOpened.value=true
+
                 } else {
-                    sharedViewModel.empty.value=false
+
                     val navHostFragment =
                         supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
                     val currentFragment1 = navHostFragment?.childFragmentManager?.fragments?.last()
                     if(currentFragment1 is HomeFragment) {
                         val action = HomeFragmentDirections.homeToDetails(gametitle)
                         navController.navigate(action)
+                    }
+                    else{
+                        val action = GameDetailsFragmentDirections.actionGameDetailsItemSelf(gametitle)
+                         navController.navigate(action)
                     }
 
                 }
@@ -122,61 +120,27 @@ class HomeActivity : AppCompatActivity() {
                     val fragment = GameDetailsFragment()
                     fragment.arguments = bundle
                     supportFragmentManager.beginTransaction()
+                        .replace(R.id.home_container, HomeFragment())
                         .replace(R.id.details_container, fragment)
                         .commit()
                 }
                 else{
-                    if(sharedViewModel.empty.value==true) {
+
                         val navHostFragment =
                             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
                         val currentFragment1 =
                             navHostFragment?.childFragmentManager?.fragments?.last()
-                        // println("ok")
+
                         if (currentFragment1 is GameDetailsFragment) {
                             val action = GameDetailsFragmentDirections.gameToHome()
                             navController.navigate(action)
                         }
-                    }
                 }
 
             }
         }
 
-
-
-
     }
-
-
-  /*  override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            val bundle = Bundle().apply {
-                putString("gameTitle", "Fortnite")
-            }
-            val fragment = GameDetailsFragment()
-            fragment.arguments = bundle
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.details_container, fragment)
-                .replace(R.id.home_container, HomeFragment())
-                .commit()
-            println("radi radi")
-        }
-        else {
-            val fragment = HomeFragment()
-            supportFragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-
-            // Start a new transaction and add the HomeFragment
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.nav_host_fragment, fragment)
-                .commit()
-        }
-    }
-
-
-   */
-
-
 
 }
 

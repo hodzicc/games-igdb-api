@@ -9,7 +9,9 @@
         android:id="@+id/homeItem"
         android:name="com.example.spirala1.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home"
+        android:contentDescription="@string/Home"
+        >
         <action
             android:id="@+id/home_to_details"
             app:destination="@id/gameDetailsItem"
@@ -27,7 +29,22 @@
         android:id="@+id/gameDetailsItem"
         android:name="com.example.spirala1.GameDetailsFragment"
         android:label="fragment_game_details"
-        tools:layout="@layout/fragment_game_details">
+        tools:layout="@layout/fragment_game_details"
+        android:contentDescription="@string/GameDetails"
+
+        >
+        <action
+            android:id="@+id/action_gameDetailsItem_self"
+            app:destination="@id/gameDetailsItem"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/bottom_nav"
+            app:popUpToInclusive="true"
+            app:popUpToSaveState="true"
+            >
+            <argument
+                android:name="message"
+                app:argType="string"/>
+        </action>
         <action
         android:id="@+id/gameToHome"
         app:destination="@id/homeItem"
@@ -36,6 +53,7 @@
             app:popUpToInclusive="true"
             app:popUpToSaveState="true"
             />
+
 
     </fragment>
 
