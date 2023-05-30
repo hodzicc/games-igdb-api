@@ -3,7 +3,6 @@ package ba.etf.rma23.projekat.data.repositories
 import android.annotation.SuppressLint
 import ba.etf.rma23.projekat.Game
 import ba.etf.rma23.projekat.GameData.Companion.getAll
-import ba.etf.rma23.projekat.GameData.Companion.getAll2
 import ba.etf.rma23.projekat.ResponseGame
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -21,6 +20,7 @@ object GamesRepository {
 
             for(i in 0 until games.size)
             {
+                var id = games[i].id
                 var title = games[i].name
                 var esrbRating:String
                 if(games[i].esrb==null)
@@ -32,9 +32,12 @@ object GamesRepository {
                 }
 
               var releaseDate = games[i].release_date
+                println(id)
                 val publisher = IGDBApiConfig.retrofit.getPublisher(games[i].publisher?.get(0) ?: 186).body()?.find {
                     it.id == (games[i].publisher?.get(0) ?: 186)
                 }?.name.toString()
+
+
                 val genre = IGDBApiConfig.retrofit.getGenre(games[i].genre?.get(0) ?: 4).body()?.find {
                     it.id == (games[i].genre?.get(
                         0
@@ -50,10 +53,10 @@ object GamesRepository {
                     games[i].cover = 65483
               val coverImage =  IGDBApiConfig.retrofit.getCover(games[i].cover ?: 65483).body()?.find { it.id == games[i].cover?:65483 }?.name.toString()
 
-                var game: Game = Game(title,platform,releaseDate,rating,coverImage,esrbRating,developer,publisher,genre,description)
+                var game: Game = Game(id,title,platform,releaseDate,rating,coverImage,esrbRating,developer,publisher,genre,description)
 
                 games1.add(game)
-                println(title)
+
 
             }
 

@@ -95,7 +95,7 @@ class GameDetailsFragment : Fragment() {
         platform.text=game.platform
         esrb.text=game.esrbRating
         developer.text=game.developer
-        publisher.text=game.publisher
+      //  publisher.text=game.publisher
         description.text=game.description
         val context: Context = img.context
         var id: Int = context.resources
