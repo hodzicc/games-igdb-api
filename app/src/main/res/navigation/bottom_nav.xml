@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeItem"
-        android:name="com.example.spirala1.HomeFragment"
+        android:name="ba.etf.rma23.projekat.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home"
         android:contentDescription="@string/Home"
@@ -27,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/gameDetailsItem"
-        android:name="com.example.spirala1.GameDetailsFragment"
+        android:name="ba.etf.rma23.projekat.GameDetailsFragment"
         android:label="fragment_game_details"
         tools:layout="@layout/fragment_game_details"
         android:contentDescription="@string/GameDetails"

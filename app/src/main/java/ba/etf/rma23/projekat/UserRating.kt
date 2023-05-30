@@ -1,4 +1,4 @@
-package com.example.spirala1
+package ba.etf.rma23.projekat
 
 data class UserRating(
     override val username: String,

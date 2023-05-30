@@ -1,7 +1,73 @@
-package com.example.spirala1
+package ba.etf.rma23.projekat
 
 class GameData {
     companion object {
+        fun getAll2(): List<Game> {
+            var usr1 = listOf(
+                UserReview(
+                    "sword_robber2",
+                    1679959758,
+                    "This game is a lot better than pubg not too much violence"
+                ),
+                UserReview(
+                    "Acalodo",
+                    1678710558,
+                    "This Game is Not that violent and non relistic. The game is fun and should be played by every one."
+                ),
+                UserRating("J G", 1615638558, 2.5),
+                UserRating("Lowkstaa", 1615984158, 4.3),
+                UserReview(
+                    "crispycankles",
+                    1647520158,
+                    "I don’t necessarily hate the game just the people who made it, it use to be something great but now I can’t even play 5 minutes of it, it’s not fun anymore, they took all the fun aspects from it by adding crappier weapons in it"
+                )
+            )
+            var usr2 = listOf(
+                UserRating("OhRly", 1345552158, 4.0),
+                UserReview(
+                    "Termin8ter",
+                    1499689758,
+                    "Counter- Strike: Global Offensive is probably the most popular multiplayer game on PC at the moment, along with last year's Overwatch. What Valve has done with this game, is pretty much take the original Counter Strike, polish and polish it up, add some new features, and release it as this new game. "
+                ),
+                UserReview(
+                    "The Escapist",
+                    1347020958,
+                    "When it comes down to it, Counter-Strike: Global Offensive may follow the same old formula of gameplay seen in previous versions of Counter-Strike, but it's still a well-rounded tactical shooter."
+                ),
+                UserReview(
+                    "danPgaming",
+                    1488198558,
+                    "CS:GO with its graphics is moderate, and PC requirements aren't too heavy on the low tier gamer."
+                ),
+                UserReview(
+                    "Ndi",
+                    1367497758,
+                    "Zero innovation. Same maps, same weapons, only weaker, a bit more graphics and bam, new game."
+                )
+            )
+
+
+            return listOf(
+                Game(
+                    "Fortnite1", "PlayStation 5", "July 21, 2017", 7.0, "fortnite",
+                    "Teen", "Epic Games", "Epic Games", "Action",
+                    "Fortnite is an online video game developed by Epic Games and released in 2017. It is available in three distinct game mode versions that otherwise share the same general gameplay and game engine: Fortnite",
+                    usr1
+                ),
+                Game(
+                    "Counter strike: Global offensive",
+                    "Xbox One",
+                    "August 21, 2012",
+                    9.0,
+                    "counter",
+                    "Mature",
+                    "Valve Corporation",
+                    " Valve Corporation",
+                    "Tactical shooter",
+                    "Counter-Strike: Global Offensive is a 2012 multiplayer tactical first-person shooter developed by Valve and Hidden Path Entertainment. It is the fourth game in the Counter-Strike series.",
+                    usr2
+                ))
+        }
         fun getAll(): List<Game> {
             var usr1 = listOf(
                 UserReview(

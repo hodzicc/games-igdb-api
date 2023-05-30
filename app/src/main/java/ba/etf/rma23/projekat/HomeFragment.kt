@@ -1,24 +1,24 @@
-package com.example.spirala1
+package ba.etf.rma23.projekat
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.core.os.bundleOf
-import androidx.fragment.app.FragmentTransaction
+import android.widget.EditText
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.spirala1.GameData.Companion.GetDetails
-import com.example.spirala1.GameData.Companion.getAll
+import ba.etf.rma23.projekat.GameData.Companion.getAll
+import ba.etf.rma23.projekat.data.repositories.GamesRepository
+import ba.etf.rma23.projekat.data.repositories.IGDBApiConfig
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+
 
 // TODO: Rename parameter arguments, choose names that match
 /**
@@ -32,6 +32,7 @@ class HomeFragment : Fragment() {
     private lateinit var game_list: RecyclerView
     private val lista = getAll()
     private lateinit var gameListAdapter: GamesListAdapter
+    private lateinit var searchEditText: EditText
     val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -54,6 +55,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         search_button = view.findViewById(R.id.search_button)
         game_list = view.findViewById(R.id.game_list)
+        searchEditText = view.findViewById(R.id.search_query_edittext)
         game_list.layoutManager = LinearLayoutManager(
             activity,
             LinearLayoutManager.VERTICAL,
@@ -65,8 +67,28 @@ class HomeFragment : Fragment() {
 
         game_list.adapter = gameListAdapter
         gameListAdapter.updateGames(lista)
+        search_button.isClickable = true
+        search_button.setOnClickListener {
+
+            val searchTerm = searchEditText.text.toString()
+            val gameRepository = GamesRepository
+            val scope = CoroutineScope( Dispatchers.Main)
+            scope.launch {
+                try {
+                    val games = gameRepository.getGamesByName(searchTerm)
+                    gameListAdapter.updateGames(games)
+                } catch (e: Exception) {
+                    // Handle any errors that occurred during the search
+                    // Display an error message or perform appropriate error handling
+                }
+            }
+
+        }
+
+
 
     }
+
 
     private fun showGameDetails(game: Game) {
 
