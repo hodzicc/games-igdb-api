@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ba.etf.rma23.projekat.GameData.Companion.getAll
+import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository
 import ba.etf.rma23.projekat.data.repositories.GamesRepository
 import ba.etf.rma23.projekat.data.repositories.IGDBApiConfig
 import kotlinx.coroutines.CoroutineScope
@@ -75,8 +76,15 @@ class HomeFragment : Fragment() {
             val scope = CoroutineScope( Dispatchers.Main)
             scope.launch {
                 try {
-                    val games = gameRepository.getGamesByName(searchTerm)
+                   /* val games = gameRepository.getGamesByName(searchTerm)
                     gameListAdapter.updateGames(games)
+                   */
+                    AccountGamesRepository.setHash("5a1208ce-21bf-4b1f-917b-ffd95937298f")
+                  //  AccountGamesRepository.saveGame(Game(24273,"Age of Empires: The Age of Kings","","",10.0,"","","","","","",listOf<UserImpression>()))
+                   // AccountGamesRepository.saveGame(Game(47076,"Age of Empires: Gold Edition","","",10.0,"","","","","","",listOf<UserImpression>()))
+
+
+                    //println(AccountGamesRepository.getHash())
                 } catch (e: Exception) {
                     // Handle any errors that occurred during the search
                     // Display an error message or perform appropriate error handling

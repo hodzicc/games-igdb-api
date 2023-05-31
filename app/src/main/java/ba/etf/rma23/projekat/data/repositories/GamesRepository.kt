@@ -31,8 +31,8 @@ object GamesRepository {
 
                 }
 
-              var releaseDate = games[i].release_date
-                println(id)
+              var releaseDate = games[i].release_date?.get(0)?.human
+                //println(games[i].release_date?.get(0)?.human)
                 val publisher = IGDBApiConfig.retrofit.getPublisher(games[i].publisher?.get(0) ?: 186).body()?.find {
                     it.id == (games[i].publisher?.get(0) ?: 186)
                 }?.name.toString()

@@ -2,7 +2,7 @@ package ba.etf.rma23.projekat.data.repositories
 
 import ba.etf.rma23.projekat.Game
 import ba.etf.rma23.projekat.ResponseGame
-import okhttp3.ResponseBody
+import com.google.gson.annotations.SerializedName
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -14,10 +14,15 @@ interface IGDBApi {
         var id: Int,
         var rating: String)
 
-    data class PlatformResponse(
-        var id: Int,
-        var name: String
+    data class StringsResponse(
+        @SerializedName("id") var id: Int,
+        @SerializedName("name") var name: String
     )
+    data class DateResponse(
+        @SerializedName("id") var id: Int,
+        @SerializedName("human") var human: String
+    )
+
     @Headers(
         value =[
             "Accept: application/json",
@@ -42,7 +47,7 @@ interface IGDBApi {
     suspend fun getPublisher(
         @Query("id") id: Int,
         @Query("fields") fields:String ="name"
-    ): Response<List<PlatformResponse>>
+    ): Response<List<StringsResponse>>
 
     @Headers(
         value =[
@@ -55,7 +60,7 @@ interface IGDBApi {
     suspend fun getGenre(
         @Query("id") id: Int,
         @Query("fields") fields:String ="name"
-    ): Response<List<PlatformResponse>>
+    ): Response<List<StringsResponse>>
 
     @Headers(
         value =[
@@ -68,7 +73,7 @@ interface IGDBApi {
     suspend fun getDeveloper(
         @Query("id") id: Int,
         @Query("fields") fields:String ="developer"
-    ): Response<List<PlatformResponse>>
+    ): Response<List<StringsResponse>>
 
     @Headers(
         value =[
@@ -81,7 +86,7 @@ interface IGDBApi {
     suspend fun getPlatform(
         @Query("id") id: Int,
         @Query("fields") fields:String ="name"
-    ): Response<List<PlatformResponse>>
+    ): Response<List<StringsResponse>>
 
     @Headers(
         value =[
@@ -94,7 +99,7 @@ interface IGDBApi {
     suspend fun getCover(
         @Query("id") id: Int,
         @Query("fields") fields:String ="url"
-    ): Response<List<PlatformResponse>>
+    ): Response<List<StringsResponse>>
 
     @Headers(
         value =[
@@ -106,7 +111,7 @@ interface IGDBApi {
     @GET("games")
     suspend fun getGamesByName(
         @Query("search") name: String,
-        @Query("fields") fields:String ="name,age_ratings,first_release_date,game_engines,genres,involved_companies,platforms,rating,summary,cover",
+        @Query("fields") fields:String ="name,age_ratings,release_dates.human,game_engines,genres,involved_companies,platforms,rating,summary,cover",
         @Query("limit") limit: Int =10
     ): Response<List<ResponseGame>>
 

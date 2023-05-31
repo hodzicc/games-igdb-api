@@ -18,7 +18,6 @@ import java.net.URL
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class RepositoriesUnitTest {
-    /*
 
     suspend fun obrisi(){
         var client: OkHttpClient = OkHttpClient()
@@ -54,6 +53,7 @@ class RepositoriesUnitTest {
         assertThat(res.size,CoreMatchers.equalTo(2))
 
     }
+ /*
 
     @Test
     fun a3_getSavedGameOtherAttributes() = runBlocking {
