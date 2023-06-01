@@ -3,7 +3,7 @@ package ba.etf.rma23.projekat
 import com.google.gson.annotations.SerializedName
 
 data class Game(
-    @SerializedName ("igdb_id") var id: Int?,
+    @SerializedName ("igdb_id") var id: Int,
     @SerializedName("name") var title: String?,
     @SerializedName ("platform") var platform: String?,
     @SerializedName("release_date") var releaseDate: String?,

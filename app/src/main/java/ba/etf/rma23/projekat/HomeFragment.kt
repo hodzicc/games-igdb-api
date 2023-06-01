@@ -76,14 +76,14 @@ class HomeFragment : Fragment() {
             val scope = CoroutineScope( Dispatchers.Main)
             scope.launch {
                 try {
-                   /* val games = gameRepository.getGamesByName(searchTerm)
+                    val games = gameRepository.getGamesByName(searchTerm)
                     gameListAdapter.updateGames(games)
-                   */
-                    AccountGamesRepository.setHash("5a1208ce-21bf-4b1f-917b-ffd95937298f")
-                  //  AccountGamesRepository.saveGame(Game(24273,"Age of Empires: The Age of Kings","","",10.0,"","","","","","",listOf<UserImpression>()))
+
+                 //   AccountGamesRepository.setHash("5a1208ce-21bf-4b1f-917b-ffd95937298f")
+                 //   AccountGamesRepository.saveGame(Game(24273,"Age of Empires: The Age of Kings","","",10.0,"","","","","","",listOf<UserImpression>()))
                    // AccountGamesRepository.saveGame(Game(47076,"Age of Empires: Gold Edition","","",10.0,"","","","","","",listOf<UserImpression>()))
-
-
+            //      println("bllabla")
+                 // println(AccountGamesRepository.getSavedGames().size)
                     //println(AccountGamesRepository.getHash())
                 } catch (e: Exception) {
                     // Handle any errors that occurred during the search

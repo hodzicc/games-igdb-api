@@ -53,7 +53,7 @@ class RepositoriesUnitTest {
         assertThat(res.size,CoreMatchers.equalTo(2))
 
     }
- /*
+
 
     @Test
     fun a3_getSavedGameOtherAttributes() = runBlocking {
@@ -62,37 +62,39 @@ class RepositoriesUnitTest {
         assertThat(res.get(0).releaseDate,CoreMatchers.containsString("2006"))
         assertThat(res.get(1).releaseDate,CoreMatchers.containsString("1999"))
     }
-*/
+
     @Test
     fun a4_getGamesByName() = runBlocking {
         var res = GamesRepository.getGamesByName("Age of Empires")
         assertThat(res, CoreMatchers.hasItem<Game>(Matchers.hasProperty("id",CoreMatchers.equalTo(24273))))
     }
-    /*
 
+/*
     @Test
     fun a5_getGamesSafe() = runBlocking {
         AccountGamesRepository.setAge(10)
+
         var res = GamesRepository.getGamesSafe("Hitman")
         assertThat(res, CoreMatchers.not(CoreMatchers.hasItem<Game>(Matchers.hasProperty("id",CoreMatchers.equalTo(11157)))))
 
         var res2 = GamesRepository.getGamesByName("Hitman")
         assertThat(res2, CoreMatchers.hasItem<Game>(Matchers.hasProperty("id",CoreMatchers.equalTo(11157))))
     }
-
+*/
     //ako vam ovaj test nekada pada, a nekada prolazi vjerovatno je ista greška kao u a2
+
     @Test
     fun a6_obrisiIgre() = runBlocking {
-        var res=AccountGamesRepository.getSavedGames()
+         var res=AccountGamesRepository.getSavedGames()
         assertThat(res.size,CoreMatchers.equalTo(2))
-        AccountGamesRepository.removeGame(res.get(0))
+        AccountGamesRepository.removeGame(res.get(0).id)
         res=AccountGamesRepository.getSavedGames()
         assertThat(res.size,CoreMatchers.equalTo(1))
-        AccountGamesRepository.removeGame(res.get(0))
+        AccountGamesRepository.removeGame(res.get(0).id)
         res=AccountGamesRepository.getSavedGames()
         assertThat(res.size,CoreMatchers.equalTo(0))
     }
-
+/*
     @Test
     fun a7_dodajIgruUOmiljeneISortiraj() = runBlocking {
         AccountGamesRepository.saveGame(Game(24273,"Age of Empires: The Age of Kings","","",10.0,"","","","","","",listOf<UserImpression>()))

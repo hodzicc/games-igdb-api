@@ -5,11 +5,13 @@ import ba.etf.rma23.projekat.Game
 import ba.etf.rma23.projekat.ResponseAccGame
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import retrofit2.Response
+import kotlin.properties.Delegates
 
 object AccountGamesRepository {
     private lateinit var accHash: String
-    private var accAge: Int = 0
+    private var accAge: Int =0
 
     public fun setHash(acHash:String):Boolean{
         accHash = acHash
@@ -18,18 +20,24 @@ object AccountGamesRepository {
     public fun getHash():String{
         return accHash;
     }
+    public fun getAge():Int{
+        return accAge;
+    }
     public fun setAge(age:Int):Boolean{
-        accAge=age
-        if(accAge<3 || accAge>100)
+
+        if(age<3 || age>100)
             return false
+        accAge=age
         return true
     }
 
     suspend fun saveGame(game:Game):Game {
         return withContext(Dispatchers.IO) {
-         //   println("uso1")
-        AccountApiConfig.retrofit.saveGame(getHash(), game)
-         //   println("uso")
+
+            val gameData = AccountApi.GameData(game.id, game.title)
+            val request = AccountApi.SaveGameRequest(gameData)
+        AccountApiConfig.retrofit.saveGame(getHash(), request)
+
             return@withContext game
         }
     }
@@ -46,6 +54,34 @@ object AccountGamesRepository {
              }
             return@withContext games1
         }
+    }
+
+    suspend fun getGamesContainingString(query: String): List<Game> {
+        return withContext(Dispatchers.IO) {
+            val savedGames = getSavedGames()
+            val filteredGames = savedGames.filter { game ->
+                game.title!!.contains(query, ignoreCase = true)
+            }
+            return@withContext filteredGames
+        }
+    }
+    suspend fun removeGame(id: Int): Boolean? {
+        val str = AccountApiConfig.retrofit.deleteGame(getHash(), id).body()
+        if(str?.succ=="Games deleted")
+            return true
+        return false
+    }
+
+    suspend fun removeNonSafe():Boolean{
+        val games1 = getSavedGames()
+        val i: Int =0
+        for(i in games1.indices)
+        {
+            if(games1[i].esrbRating==null || games1[i].esrbRating?.toInt()!! <= getAge())
+
+                games1[i].id?.let { removeGame(it) }
+        }
+        return true
     }
 
 

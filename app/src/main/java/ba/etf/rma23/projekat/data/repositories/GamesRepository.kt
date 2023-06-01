@@ -2,65 +2,87 @@ package ba.etf.rma23.projekat.data.repositories
 
 import android.annotation.SuppressLint
 import ba.etf.rma23.projekat.Game
-import ba.etf.rma23.projekat.GameData.Companion.getAll
-import ba.etf.rma23.projekat.ResponseGame
+import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.Response
+import kotlin.math.roundToInt
 
 object GamesRepository {
-    @SuppressLint("SuspiciousIndentation")
-    suspend fun getGamesByName(name: String): List<Game> {
+    data class DateResponse(
+        @SerializedName("id") var id: Int,
+        @SerializedName("human") var human: String
+    )
+
+    data class RatingResponse(
+        @SerializedName("id") var id: Int,
+        @SerializedName("rating") var rating: Double
+    )
+
+    data class NameResponse(
+        @SerializedName("id") var id: Int,
+        @SerializedName("name") var name: String
+    )
+
+    data class DeveloperResponse(
+        @SerializedName("id") var id: Int,
+        @SerializedName("developer") var developer: String
+    )
+
+    data class URLResponse(
+        @SerializedName("id") var id: Int,
+        @SerializedName("url") var url: String
+    )
+    suspend fun getGamesByName(name:String):List<Game>{
         return withContext(Dispatchers.IO) {
+            val response = IGDBApiConfig.retrofit.getGamesByName(name)
+            val games1 = response.body() ?: emptyList()
+            val games: MutableList<Game> = mutableListOf()
 
-            val response: Response<List<ResponseGame>> = IGDBApiConfig.retrofit.getGamesByName(name)
-            val games: List<ResponseGame> = response.body() ?: emptyList()
-            val games1: MutableList<Game> = mutableListOf()
-            val i: Int =0
+            for(i in games1.indices){
+                val id = games1[i].id
+                val title = games1[i].name
+                val esrbRating = games1[i].esrb?.get(0)?.rating.toString()
+                val releaseDate = games1[i].release_date?.get(0)?.human
+                val publisher = games1[i].publisher?.get(0)?.name
+                val genre = games1[i].genre?.get(0)?.name
+                val developer = games1[i].developer?.get(0)?.developer
+                val platform = games1[i].platform?.get(0)?.name
+                val rating = (games1[i].rating?.times(10))?.roundToInt()?.div(10.0)
+                val description = games1[i].description
+                val coverImage = games1[i].cover?.url
+                val game: Game = Game(id,title,platform,releaseDate.toString(),rating,coverImage,esrbRating,developer,publisher,genre,description, listOf())
 
-            for(i in 0 until games.size)
-            {
-                var id = games[i].id
-                var title = games[i].name
-                var esrbRating:String
-                if(games[i].esrb==null)
-                    esrbRating = "10"
-                else {
-                val response1: Response<List<IGDBApi.AgeResponse>> = IGDBApiConfig.retrofit.getAgeRating(games[i].esrb?.get(0) ?: 1)
-                    esrbRating = response1.body()?.find { it.id == games[i].esrb?.get(0) ?: 2853 }?.rating.toString()
-
-                }
-
-              var releaseDate = games[i].release_date?.get(0)?.human
-                //println(games[i].release_date?.get(0)?.human)
-                val publisher = IGDBApiConfig.retrofit.getPublisher(games[i].publisher?.get(0) ?: 186).body()?.find {
-                    it.id == (games[i].publisher?.get(0) ?: 186)
-                }?.name.toString()
-
-
-                val genre = IGDBApiConfig.retrofit.getGenre(games[i].genre?.get(0) ?: 4).body()?.find {
-                    it.id == (games[i].genre?.get(
-                        0
-                    ) ?: 4)
-                }?.name.toString()
-              val developer = IGDBApiConfig.retrofit.getDeveloper(games[i].developer?.get(0) ?: 95000).body()?.find { it.id == games[i].developer?.get(0)?:95000 }?.name.toString()
-              var platform = IGDBApiConfig.retrofit.getPlatform(games[i].platform?.get(0) ?: 39).body()?.find { it.id == games[i].platform?.get(0)?: 39 }?.name.toString()
-
-              var rating = games[i].rating
-              val description = games[i].description
-
-                if(games[i].cover==null)
-                    games[i].cover = 65483
-              val coverImage =  IGDBApiConfig.retrofit.getCover(games[i].cover ?: 65483).body()?.find { it.id == games[i].cover?:65483 }?.name.toString()
-
-                var game: Game = Game(id,title,platform,releaseDate,rating,coverImage,esrbRating,developer,publisher,genre,description)
-
-                games1.add(game)
-
-
+              //  println(esrbRating)
+                games.add(game)
             }
-
-            return@withContext games1
+            return@withContext games
         }
+
     }
+
+    @SuppressLint("SuspiciousIndentation")
+    suspend fun getGamesSafe(name:String):List<Game>{
+        if(AccountGamesRepository.getAge()==0)
+            return listOf()
+        val games = getGamesByName(name)
+        val games1: MutableList<Game> = mutableListOf()
+        val i:Int =0
+        for(i in games.indices)
+        {
+            if(games[i].esrbRating==null)
+            {
+                games1.add(games[i])
+            }
+            else
+            {
+                if((games[i].esrbRating?.toDoubleOrNull()
+                        ?: 0.0) <= AccountGamesRepository.getAge()
+                )
+               // println(games[i].esrbRating)
+                games1.add(games[i])
+            }
+        }
+        return games1
+    }
+
 }
