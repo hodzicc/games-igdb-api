@@ -2,6 +2,7 @@ package ba.etf.rma23.projekat.data.repositories
 
 import android.annotation.SuppressLint
 import ba.etf.rma23.projekat.Game
+import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository.getAge
 import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository.getSavedGames
 import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Dispatchers
@@ -69,20 +70,40 @@ object GamesRepository {
             return listOf()
         val games = getGamesByName(name)
         val games1: MutableList<Game> = mutableListOf()
-        val i:Int =0
+//println(games.size)
         for(i in games.indices)
         {
+           // println("bla")
+           // println(games[i].esrbRating)
             if(games[i].esrbRating==null)
             {
                 games1.add(games[i])
             }
             else
             {
-                if((games[i].esrbRating?.toDoubleOrNull()
-                        ?: 0.0) <= AccountGamesRepository.getAge()
-                )
-               // println(games[i].esrbRating)
-                games1.add(games[i])
+                var value = games[i].esrbRating
+                var value1: Int=1
+                if(value=="1.0") value1=3
+                else if(value=="2.0") value1=7
+                else if(value=="3.0") value1=12
+                else if(value=="4.0") value1=16
+                else if(value=="5.0") value1=18
+                else if(value=="6.0") value1=1
+                else if(value=="7.0") value1=3
+                else if(value=="8.0") value1=1
+                else if(value=="9.0") value1=10
+                else if(value=="10.0") value1=13
+                else if(value=="11.0") value1=17
+                else if(value=="12.0") value1=18
+                else {
+                    value1=1
+                }
+
+                if(value1<=getAge())
+                {
+                    games1.add(games[i])
+
+                }
             }
         }
         lista=games1
@@ -90,7 +111,7 @@ object GamesRepository {
     }
 
     suspend fun sortGames():List<Game>{
-        val savedGames = getSavedGames() // Assuming you have a function to retrieve the saved games
+        val savedGames = getSavedGames()
         val favorites = savedGames.associateBy { it.title }
         val sortedGames = mutableListOf<Game>()
 
