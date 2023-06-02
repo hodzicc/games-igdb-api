@@ -2,12 +2,14 @@ package ba.etf.rma23.projekat.data.repositories
 
 import android.annotation.SuppressLint
 import ba.etf.rma23.projekat.Game
+import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository.getSavedGames
 import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
 
 object GamesRepository {
+    private lateinit var lista: List<Game>
     data class DateResponse(
         @SerializedName("id") var id: Int,
         @SerializedName("human") var human: String
@@ -55,6 +57,7 @@ object GamesRepository {
               //  println(esrbRating)
                 games.add(game)
             }
+            lista=games
             return@withContext games
         }
 
@@ -82,7 +85,26 @@ object GamesRepository {
                 games1.add(games[i])
             }
         }
+        lista=games1
         return games1
+    }
+
+    suspend fun sortGames():List<Game>{
+        val savedGames = getSavedGames() // Assuming you have a function to retrieve the saved games
+        val favorites = savedGames.associateBy { it.title }
+        val sortedGames = mutableListOf<Game>()
+
+        for (game in savedGames) {
+            if (lista.contains(game)) {
+                sortedGames.add(game)
+            }
+        }
+        sortedGames.sortBy { it.title }
+        val remainingGames = lista.filterNot { it.title in favorites.keys }
+        remainingGames.sortedBy { it.title }
+        sortedGames.addAll(remainingGames)
+
+        return sortedGames
     }
 
 }

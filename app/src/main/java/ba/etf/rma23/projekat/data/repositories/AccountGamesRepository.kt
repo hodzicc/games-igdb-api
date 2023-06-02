@@ -66,7 +66,7 @@ object AccountGamesRepository {
         }
     }
     suspend fun removeGame(id: Int): Boolean? {
-        val str = AccountApiConfig.retrofit.deleteGame(getHash(), id).body()
+        var str = AccountApiConfig.retrofit.deleteGame(getHash(), id).body()
         if(str?.succ=="Games deleted")
             return true
         return false

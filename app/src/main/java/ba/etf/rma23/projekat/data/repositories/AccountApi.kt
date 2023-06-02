@@ -32,13 +32,13 @@ interface AccountApi {
         @SerializedName ("success") val succ: String?
     )
 
-    @POST("account/{aid}/game")
+    @POST("{aid}/game")
     suspend fun saveGame(
         @Path("aid") aid: String,
         @Body game:SaveGameRequest
     ): Response<ResponseAccGame1>
 
-    @GET("account/{aid}/games")
+    @GET("{aid}/games")
     suspend fun getSavedGames(
         @Path("aid") aid: String
     ): Response<List<ResponseAccGame>>

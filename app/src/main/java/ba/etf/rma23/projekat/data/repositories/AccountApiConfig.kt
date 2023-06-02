@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object AccountApiConfig {
     val retrofit : AccountApi = Retrofit.Builder()
-        .baseUrl("https://rma23ws.onrender.com/")
+        .baseUrl("https://rma23ws.onrender.com/account/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(AccountApi::class.java)
