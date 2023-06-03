@@ -31,30 +31,27 @@ class HomeFragment : Fragment() {
     private lateinit var game1: Game
     private lateinit var search_button: Button
     private lateinit var game_list: RecyclerView
-    private val lista = getAll()
+    private lateinit var lista: List<Game>
     private lateinit var gameListAdapter: GamesListAdapter
     private lateinit var searchEditText: EditText
+    private lateinit var sort_button: Button
+    private lateinit var favorites_button: Button
     val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        /*
-        if (container != null) {
-            container.removeAllViews();
-        }
-
-
-         */
-
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         return view;
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        AccountGamesRepository.setHash("5a1208ce-21bf-4b1f-917b-ffd95937298f")
         search_button = view.findViewById(R.id.search_button)
+        sort_button = view.findViewById(R.id.sort_button)
+        favorites_button = view.findViewById(R.id.favorites_button)
         game_list = view.findViewById(R.id.game_list)
         searchEditText = view.findViewById(R.id.search_query_edittext)
         game_list.layoutManager = LinearLayoutManager(
@@ -67,45 +64,73 @@ class HomeFragment : Fragment() {
         }
 
         game_list.adapter = gameListAdapter
-        gameListAdapter.updateGames(lista)
-        search_button.isClickable = true
-        search_button.setOnClickListener {
+        val scope = CoroutineScope( Dispatchers.Main)
+        scope.launch {
+            try {
 
-            val searchTerm = searchEditText.text.toString()
-            val gameRepository = GamesRepository
-            val scope = CoroutineScope( Dispatchers.Main)
-            scope.launch {
-                try {
-                   AccountGamesRepository.setHash("5a1208ce-21bf-4b1f-917b-ffd95937298f")
-                /*    AccountGamesRepository.saveGame(Game(24273,"Age of Empires: The Age of Kings","","",10.0,"","","","","","",listOf<UserImpression>()))
-                     AccountGamesRepository.saveGame(Game(47076,"Age of Empires: Gold Edition","","",10.0,"","","","","","",listOf<UserImpression>()))
-                    AccountGamesRepository.saveGame(Game(11157,"Hitman","","",10.0,"","","","","","",listOf<UserImpression>()))
+                val games = AccountGamesRepository.getSavedGames()
+                gameListAdapter.updateGames(games)
+                search_button.isClickable = true
+                search_button.setOnClickListener {
 
+                    val searchTerm = searchEditText.text.toString()
+                    val gameRepository = GamesRepository
+                    val scope = CoroutineScope( Dispatchers.Main)
+                    scope.launch {
+                        try {
+                            val games = gameRepository.getGamesByName(searchTerm)
+                            gameListAdapter.updateGames(games)
 
-                 */
-                    AccountGamesRepository.setAge(15)
-                  //  val games = gameRepository.getGamesSafe(searchTerm)
-                  //  gameListAdapter.updateGames(games)
-               //    println("aa"+AccountGamesRepository.getSavedGames()[1].title)
-                //    AccountGamesRepository.removeNonSafe()
+                        } catch (e: Exception) {
+                            // Handle any errors that occurred during the search
+                            // Display an error message or perform appropriate error handling
+                        }
+                    }
 
-
-
-                 //   AccountGamesRepository.setHash("5a1208ce-21bf-4b1f-917b-ffd95937298f")
-               //     AccountGamesRepository.saveGame(Game(24273,"Age of Empires: The Age of Kings","","",10.0,"","","","","","",listOf<UserImpression>()))
-                   // AccountGamesRepository.saveGame(Game(47076,"Age of Empires: Gold Edition","","",10.0,"","","","","","",listOf<UserImpression>()))
-            //      println("bllabla")
-                //  println("prije"+AccountGamesRepository.getSavedGames().size)
-                 //   AccountGamesRepository.removeGame(24273)
-                 //   println("poslije"+AccountGamesRepository.getSavedGames().size)
-                    //println(AccountGamesRepository.getHash())
-                } catch (e: Exception) {
-                    // Handle any errors that occurred during the search
-                    // Display an error message or perform appropriate error handling
                 }
-            }
 
+                sort_button.isClickable = true
+                sort_button.setOnClickListener {
+
+                    val gameRepository = GamesRepository
+                    val scope = CoroutineScope( Dispatchers.Main)
+                    scope.launch {
+                        try {
+                            val games = gameRepository.sortGames()
+                            gameListAdapter.updateGames(games)
+
+                        } catch (e: Exception) {
+                            // Handle any errors that occurred during the search
+                            // Display an error message or perform appropriate error handling
+                        }
+                    }
+
+                }
+
+                favorites_button.isClickable = true
+                favorites_button.setOnClickListener {
+
+                    val gameRepository = GamesRepository
+                    val scope = CoroutineScope( Dispatchers.Main)
+                    scope.launch {
+                        try {
+                            val games = AccountGamesRepository.getSavedGames()
+                            gameListAdapter.updateGames(games)
+
+                        } catch (e: Exception) {
+                            // Handle any errors that occurred during the search
+                            // Display an error message or perform appropriate error handling
+                        }
+                    }
+
+                }
+
+
+            } catch (e: Exception) {
+            }
         }
+
+
 
 
 
@@ -116,6 +141,7 @@ class HomeFragment : Fragment() {
 
         sharedViewModel.isGameDetailsOpened.value=true
         sharedViewModel.gametitle.value=game.title
+        sharedViewModel.gameid.value=game.id
 
     }
 

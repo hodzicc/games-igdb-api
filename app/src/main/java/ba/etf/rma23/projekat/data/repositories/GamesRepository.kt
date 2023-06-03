@@ -10,7 +10,7 @@ import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
 
 object GamesRepository {
-    private lateinit var lista: List<Game>
+    public var lista: List<Game> =listOf()
     data class DateResponse(
         @SerializedName("id") var id: Int,
         @SerializedName("human") var human: String
@@ -59,6 +59,7 @@ object GamesRepository {
                 games.add(game)
             }
             lista=games
+      //      println("pozvana by name")
             return@withContext games
         }
 
@@ -111,18 +112,25 @@ object GamesRepository {
     }
 
     suspend fun sortGames():List<Game>{
+        val listica = GamesRepository.lista
         val savedGames = getSavedGames()
         val favorites = savedGames.associateBy { it.title }
         val sortedGames = mutableListOf<Game>()
 
+        lista = listica
         for (game in savedGames) {
             if (lista.contains(game)) {
                 sortedGames.add(game)
             }
         }
         sortedGames.sortBy { it.title }
-        val remainingGames = lista.filterNot { it.title in favorites.keys }
-        remainingGames.sortedBy { it.title }
+        val remainingGames = mutableListOf<Game>()
+        for(game in lista)
+        {
+            if(!sortedGames.contains(game))
+                remainingGames.add(game)
+        }
+        remainingGames.sortBy { it.title }
         sortedGames.addAll(remainingGames)
 
         return sortedGames

@@ -23,7 +23,7 @@ import org.mockito.Mockito.*
 class OwnEspressoTests {
 
     @get:Rule
-    var homeRule:ActivityScenarioRule<HomeActivity> = ActivityScenarioRule(HomeActivity::class.java)
+    var homeRule:ActivityScenarioRule<MainActivity> = ActivityScenarioRule(MainActivity::class.java)
     /*
     Test za provjeru rasporeda elemenata na fragment_game_details
     Prvo se izvršava akcija na prvu igru, te se nakon toga provjerava da li su elementi
@@ -100,7 +100,7 @@ class OwnEspressoTests {
     @Test
     fun testNavigationToGameDetailsInLandscape() {
 
-        val activityScenario = ActivityScenario.launch(HomeActivity::class.java)
+        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
 
         activityScenario.onActivity { activity ->
             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -173,7 +173,7 @@ class OwnEspressoTests {
 
         onView(withId(R.id.gameDetailsItem)).check(matches(not(isEnabled())))
 
-        val activityScenario = ActivityScenario.launch(HomeActivity::class.java)
+        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
 
         activityScenario.onActivity { activity ->
             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE

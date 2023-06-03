@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,16 +11,14 @@
         android:layout_height="match_parent"
         android:fillViewport="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        tools:context=".HomeActivity">
+        tools:context=".MainActivity">
 
         <LinearLayout
-            android:id="@+id/lin1"
+            android:id="@+id/lin3"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
@@ -28,28 +27,42 @@
             android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@id/lin2"
             >
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:id="@+id/logo_image"
-                android:layout_height="93dp"
 
-                app:layout_constraintBottom_toTopOf="@+id/search_query_edittext"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintHorizontal_bias="0.051"
-                app:layout_constraintHorizontal_chainStyle="spread_inside"
+            <Button
+                android:id="@+id/sort_button"
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="52dp"
+                android:text="SORT"
+                app:layout_constraintBottom_toTopOf="@id/lin2"
+                app:layout_constraintEnd_toStartOf="@+id/favorites_button"
+                app:layout_constraintHorizontal_bias="0.238"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0" />
 
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/img" />
+            <Button
+                android:id="@+id/favorites_button"
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="52dp"
+                android:text="FAVORITES"
+                app:layout_constraintBottom_toTopOf="@id/lin2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.238"
+                app:layout_constraintStart_toEndOf="@id/sort_button"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0" />
 
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/lin2"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/lin1"
+            app:layout_constraintTop_toBottomOf="@+id/lin3"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:orientation="horizontal"
@@ -67,7 +80,6 @@
                 android:orientation="vertical"
                 app:layout_constraintRight_toLeftOf="@id/search_button"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/lin1"
                 app:layout_constraintBottom_toTopOf="@id/game_list"
                 />
 
@@ -98,6 +110,8 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lin2" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </FrameLayout>

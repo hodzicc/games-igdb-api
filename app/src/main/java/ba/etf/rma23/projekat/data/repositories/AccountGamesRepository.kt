@@ -59,6 +59,8 @@ object AccountGamesRepository {
                  }
 
              }
+  //          println("pozvana saved")
+            GamesRepository.lista = games1
             return@withContext games1
         }
     }
