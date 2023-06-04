@@ -1,29 +1,24 @@
 package ba.etf.rma23.projekat
 
 import android.annotation.SuppressLint
-import android.app.SharedElementCallback
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.os.AsyncTask
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository
 import ba.etf.rma23.projekat.data.repositories.GamesRepository
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.InputStream
-import java.net.URL
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -157,13 +152,10 @@ class GameDetailsFragment : Fragment() {
         developer.text=game.developer
         publisher.text=game.publisher
         description.text=game.description
-        val context: Context = img.context
-        var id: Int = context.resources
-            .getIdentifier(game.coverImage, "drawable", context.packageName)
-        if (id===0) id=context.resources
-            .getIdentifier("img", "drawable", context.packageName)
+        val imageUrl = game.coverImage
+        Picasso.get().load("https:"+imageUrl).fit().into(img);
 
-       img.setImageResource(id)
+
     }
     @SuppressLint("SuspiciousIndentation")
     private fun getGameByTitle(name:String?):Game{
