@@ -28,27 +28,56 @@ interface AccountApi {
         @SerializedName("name") val name: String?
     )
 
+    data class ReviewRequestBody(
+       @SerializedName("review") val review: String,
+       @SerializedName ("rating") val rating: Int
+    )
+
+
     data class DeleteGameResponse(
         @SerializedName ("success") val succ: String?
     )
 
-    @POST("{aid}/game")
+    data class DeleteGameReviewResponse(
+        @SerializedName ("success") val succ: Boolean?,
+        @SerializedName ("obrisano") val deleted: Int?
+    )
+
+    @POST("account/{aid}/game")
     suspend fun saveGame(
         @Path("aid") aid: String,
         @Body game:SaveGameRequest
     ): Response<ResponseAccGame1>
 
-    @GET("{aid}/games")
+
+
+    @GET("account/{aid}/games")
     suspend fun getSavedGames(
         @Path("aid") aid: String
     ): Response<List<ResponseAccGame>>
 
-    @DELETE("{aid}/game/{gid}")
+    @DELETE("account/{aid}/game/{gid}")
     suspend fun deleteGame(
         @Path("aid") id: String,
         @Path("gid") igdb_id: Int
     ) : Response<DeleteGameResponse>
 
+    @POST("account/{aid}/game/{gid}/gamereview")
+    suspend fun postGameReview(
+        @Path("aid") id: String,
+        @Path("gid") igdb_id: Int,
+        @Body review: ReviewRequestBody
+    ) : Response<GameReview>
+
+    @GET("game/{gid}/gamereviews")
+    suspend fun getGameReviews(
+        @Path("gid") igdb_id: Int
+    ) : Response<List<GameReview>>
+
+    @DELETE("account/{aid}/gamereviews")
+    suspend fun deleteGameReviews(
+        @Path("aid") id: String
+    ) : Response<DeleteGameReviewResponse>
 
 
 

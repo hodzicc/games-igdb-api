@@ -8,16 +8,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import ba.etf.rma23.projekat.GameData.Companion.getAll
 import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository
+import ba.etf.rma23.projekat.data.repositories.GameReviewsRepository
 import ba.etf.rma23.projekat.data.repositories.GamesRepository
-import ba.etf.rma23.projekat.data.repositories.IGDBApiConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 
@@ -80,6 +77,12 @@ class HomeFragment : Fragment() {
                         try {
                             val games = gameRepository.getGamesByName(searchTerm)
                             gameListAdapter.updateGames(games)
+
+                            println("blabla")
+
+                            val reviews = GameReviewsRepository.getReviewsForGame(24273)
+                            println(reviews[0].review)
+                            println("blaaaaa")
 
                         } catch (e: Exception) {
                             // Handle any errors that occurred during the search
