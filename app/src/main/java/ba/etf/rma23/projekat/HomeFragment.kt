@@ -1,5 +1,6 @@
 package ba.etf.rma23.projekat
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,7 +11,11 @@ import android.widget.EditText
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.platform.app.InstrumentationRegistry
 import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository
+import ba.etf.rma23.projekat.data.repositories.AppDatabase
+import ba.etf.rma23.projekat.data.repositories.GameReview
 import ba.etf.rma23.projekat.data.repositories.GameReviewsRepository
 import ba.etf.rma23.projekat.data.repositories.GamesRepository
 import kotlinx.coroutines.CoroutineScope
@@ -75,14 +80,12 @@ class HomeFragment : Fragment() {
                     val scope = CoroutineScope( Dispatchers.Main)
                     scope.launch {
                         try {
-                            val games = gameRepository.getGamesByName(searchTerm)
+                          val games = gameRepository.getGamesByName(searchTerm)
                             gameListAdapter.updateGames(games)
 
-                            println("blabla")
+                            AccountGamesRepository.setHash("5a1208ce-21bf-4b1f-917b-ffd95937298f")
 
-                            val reviews = GameReviewsRepository.getReviewsForGame(24273)
-                            println(reviews[0].review)
-                            println("blaaaaa")
+
 
                         } catch (e: Exception) {
                             // Handle any errors that occurred during the search

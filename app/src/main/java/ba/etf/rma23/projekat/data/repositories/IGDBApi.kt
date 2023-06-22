@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface IGDBApi {
@@ -38,6 +39,12 @@ interface IGDBApi {
         @Query("limit") limit: Int =10
     ): Response<List<ResponseGame>>
 
+    @GET("games/{id}")
+    suspend fun getGamesById(
+        @Path("id") id: Int,
+        @Query("fields") fields: String = "name,release_dates.human,age_ratings.rating,game_engines.name,genres.name,involved_companies.developer,platforms.name,summary,cover.url,rating",
+        @Query("limit") limit: Int =10
+    ): Response<List<ResponseGame>>
 
     @Headers(
         value =[

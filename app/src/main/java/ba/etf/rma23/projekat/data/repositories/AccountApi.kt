@@ -29,8 +29,8 @@ interface AccountApi {
     )
 
     data class ReviewRequestBody(
-       @SerializedName("review") val review: String,
-       @SerializedName ("rating") val rating: Int
+       @SerializedName("review") val review: String?,
+       @SerializedName ("rating") val rating: Int?
     )
 
 

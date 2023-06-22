@@ -4,9 +4,23 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverter
+import androidx.room.TypeConverters
 import kotlin.coroutines.CoroutineContext
 
+class BooleanConverter {
+    @TypeConverter
+    fun fromBoolean(value: Boolean): Int {
+        return if (value) 1 else 0
+    }
+
+    @TypeConverter
+    fun toBoolean(value: Int): Boolean {
+        return value != 0
+    }
+}
 @Database(entities = arrayOf(GameReview::class), version = 1)
+@TypeConverters(BooleanConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun gameReviewDao(): GameReviewDao
     companion object {
@@ -23,7 +37,7 @@ abstract class AppDatabase : RoomDatabase() {
             Room.databaseBuilder(
                 context.applicationContext,
                 AppDatabase::class.java,
-                "gamereviews-db"
+                "gamereview"
             ).build()
     }
 }

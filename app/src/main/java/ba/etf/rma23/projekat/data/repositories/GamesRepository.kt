@@ -65,6 +65,33 @@ object GamesRepository {
 
     }
 
+    suspend fun getGameById(id: Int): Game{
+        return withContext(Dispatchers.IO) {
+            val response = IGDBApiConfig.retrofit.getGamesById(id)
+            val games1 = response.body() ?: emptyList()
+            val games: MutableList<Game> = mutableListOf()
+
+            for(i in games1.indices){
+                val id = games1[i].id
+                val title = games1[i].name
+                val esrbRating = games1[i].esrb?.get(0)?.rating.toString()
+                val releaseDate = games1[i].release_date?.get(0)?.human
+                val publisher = games1[i].publisher?.get(0)?.name
+                val genre = games1[i].genre?.get(0)?.name
+                val developer = games1[i].developer?.get(0)?.developer
+                val platform = games1[i].platform?.get(0)?.name
+                val rating = (games1[i].rating?.times(10))?.roundToInt()?.div(10.0)
+                val description = games1[i].description
+                val coverImage = games1[i].cover?.url
+                val game: Game = Game(id,title,platform,releaseDate.toString(),rating,coverImage,esrbRating,developer,publisher,genre,description, listOf())
+
+                //  println(esrbRating)
+                games.add(game)
+            }
+
+            return@withContext games[0]
+        }
+    }
     @SuppressLint("SuspiciousIndentation")
     suspend fun getGamesSafe(name:String):List<Game>{
         if(AccountGamesRepository.getAge()==0)
