@@ -46,7 +46,7 @@ class DBTest {
 
 
     private val countNotOnline =
-        "SELECT COUNT(*) AS broj_reviews FROM gamereview WHERE online='false'"
+        "SELECT COUNT(*) AS broj_reviews FROM gamereview WHERE online=0"
 
     private fun executeCountAndCheck(query: String, column: String, value: Long) {
         var rezultat = db.rawQuery(query, null)
@@ -120,8 +120,6 @@ class DBTest {
         var rez =
             GameReviewsRepository.sendReview(context, GameReview(3, "dobro", idIGRE, false, "", ""))
         assert(!rez) { "Should return false" }
-      // println("blaaa"+rez)
-
         executeCountAndCheck(countNotOnline, "broj_reviews", 1)
     }
 

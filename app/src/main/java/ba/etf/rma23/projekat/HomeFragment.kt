@@ -81,11 +81,7 @@ class HomeFragment : Fragment() {
                     scope.launch {
                         try {
                           val games = gameRepository.getGamesByName(searchTerm)
-                            gameListAdapter.updateGames(games)
-
-                            AccountGamesRepository.setHash("5a1208ce-21bf-4b1f-917b-ffd95937298f")
-
-
+                          gameListAdapter.updateGames(games)
 
                         } catch (e: Exception) {
                             // Handle any errors that occurred during the search
