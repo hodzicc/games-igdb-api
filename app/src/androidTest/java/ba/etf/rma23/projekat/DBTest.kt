@@ -46,7 +46,7 @@ class DBTest {
 
 
     private val countNotOnline =
-        "SELECT COUNT(*) AS broj_reviews FROM gamereview WHERE online=0"
+        "SELECT COUNT(*) AS broj_reviews FROM gamereview WHERE online=false"
 
     private fun executeCountAndCheck(query: String, column: String, value: Long) {
         var rezultat = db.rawQuery(query, null)
@@ -128,7 +128,7 @@ class DBTest {
         var uia = InstrumentationRegistry.getInstrumentation().uiAutomation
         uia.executeShellCommand("svc wifi enable")
         uia.executeShellCommand("svc data enable")
-        Thread.sleep(2000)
+        Thread.sleep(5000)
         var rez = GameReviewsRepository.sendOfflineReviews(context)
         assertEquals(rez, 1)
         executeCountAndCheck(countNotOnline, "broj_reviews", 0)

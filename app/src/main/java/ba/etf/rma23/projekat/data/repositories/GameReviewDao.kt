@@ -12,8 +12,6 @@ interface GameReviewDao {
 suspend fun getAll(): List<GameReview>
 @Insert
 suspend fun insertAll(vararg gamereviews: GameReview)
-@Query("SELECT COUNT(*) AS broj_reviews FROM gamereview WHERE online='false'")
-suspend fun getOfflineReviews(): Int
     @Query("DELETE FROM gamereview")
     suspend fun deleteAll()
     @Update

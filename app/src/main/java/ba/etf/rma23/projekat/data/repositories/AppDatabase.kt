@@ -9,7 +9,7 @@ import androidx.room.TypeConverters
 import kotlin.coroutines.CoroutineContext
 
 
-@Database(entities = arrayOf(GameReview::class), version = 1)
+@Database(entities = [GameReview::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun gameReviewDao(): GameReviewDao
     companion object {
