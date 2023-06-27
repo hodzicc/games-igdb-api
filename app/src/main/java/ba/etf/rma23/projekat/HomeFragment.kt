@@ -132,10 +132,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-
-
-
-
     }
 
 

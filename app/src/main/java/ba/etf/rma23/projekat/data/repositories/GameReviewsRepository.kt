@@ -21,16 +21,9 @@ object GameReviewsRepository {
 
     suspend fun getOfflineReviews(context: Context): List<GameReview> {
         return withContext(Dispatchers.IO) {
-            val db = AppDatabase.getInstance(context)
-            val gamereviews :  MutableList<GameReview> = mutableListOf()
-            val revs = db?.gameReviewDao()?.getAll()
-            if (revs != null) {
-                for(i in revs)
-                {
-                    if(i.online==false)
-                   gamereviews.add(i)
-                }
-            }
+            var db = AppDatabase.getInstance(context)
+            var gamereviews = db.gameReviewDao().getOfflineReviews()
+
             return@withContext gamereviews
         }
     }
@@ -121,20 +114,19 @@ object GameReviewsRepository {
     suspend fun sendOfflineReviews(context: Context): Int {
         return withContext(Dispatchers.IO) {
             val db = AppDatabase.getInstance(context)
-            val offlineReviews = getOfflineReviews(context)
-            var sentReviewCount = 0
+            val offlineReviews = db?.gameReviewDao()?.getOfflineReviews()
+            db.gameReviewDao().deleteAll()
+            var sentReviews = 0
 
             offlineReviews?.forEach { review ->
-
-               sendReview(context,review)
-
-                    review.online = true
-                    db?.gameReviewDao()?.update(review)
-                    sentReviewCount++
-
+                if(sendReview(context, review)) {
+                    sentReviews++
+                }
+                else
+                    db.gameReviewDao().insertAll(review)
             }
 
-            return@withContext sentReviewCount
+            return@withContext sentReviews
     }
 }
 

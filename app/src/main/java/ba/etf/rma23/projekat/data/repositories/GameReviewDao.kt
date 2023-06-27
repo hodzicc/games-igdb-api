@@ -8,6 +8,8 @@ import androidx.room.Update
 
 @Dao
 interface GameReviewDao {
+    @Query("DELETE FROM gamereview WHERE online=:isOnline")
+    suspend fun deleteOnline(isOnline: Boolean = true)
 @Query("SELECT * FROM gamereview")
 suspend fun getAll(): List<GameReview>
 @Insert
@@ -16,4 +18,7 @@ suspend fun insertAll(vararg gamereviews: GameReview)
     suspend fun deleteAll()
     @Update
     suspend fun update(review: GameReview)
+
+    @Query("SELECT * FROM gamereview WHERE online = :isOnline")
+    suspend fun getOfflineReviews(isOnline: Boolean = false): List<GameReview>
 }

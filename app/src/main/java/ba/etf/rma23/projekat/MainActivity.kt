@@ -5,11 +5,18 @@ import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import ba.etf.rma23.projekat.data.repositories.AppDatabase
+import ba.etf.rma23.projekat.data.repositories.GameReview
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
@@ -24,6 +31,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        var scope = CoroutineScope(Job() + Dispatchers.IO)
+        scope.launch {
+            var db = AppDatabase.getInstance(this@MainActivity)
+            var review = GameReview(0, null, 0, true, "", "")
+            db.gameReviewDao().insertAll(review)
+            db.gameReviewDao().deleteOnline()
+
+        }
 
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             temp=sharedViewModel.gametitle.value
