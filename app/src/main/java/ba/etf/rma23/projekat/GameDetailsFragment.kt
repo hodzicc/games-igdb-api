@@ -6,17 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository
+import ba.etf.rma23.projekat.data.repositories.GameReview
+import ba.etf.rma23.projekat.data.repositories.GameReviewsRepository
 import ba.etf.rma23.projekat.data.repositories.GamesRepository
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 
@@ -41,10 +46,14 @@ class GameDetailsFragment : Fragment() {
     private lateinit var publisher: TextView
     private lateinit var genre: TextView
     private lateinit var description: TextView
-    private lateinit var userImpressions: RecyclerView
     private lateinit var addButton: Button
     private lateinit var removeButton: Button
-    private lateinit var impressionsListAdapter: ImpressionsListAdapter
+    private lateinit var impressionsView: RecyclerView
+    private lateinit var impressionsAdapter: ImpressionsListAdapter
+    private var impressions: List<UserImpression> = emptyList()
+    private lateinit var addImpression: Button
+    private lateinit var reviewEditText: EditText
+    private lateinit var ratingBarImpression: RatingBar
     val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -74,6 +83,10 @@ class GameDetailsFragment : Fragment() {
         description = view.findViewById(R.id.description_textview)
         addButton = view.findViewById(R.id.add_button)
         removeButton = view.findViewById(R.id.remove_button)
+        addImpression = view.findViewById(R.id.send_impressions)
+        reviewEditText = view.findViewById(R.id.review_edittext)
+        ratingBarImpression = view.findViewById(R.id.rating_bar_impression)
+
         val args = arguments
         var message = args?.getString("message")
         if (message != null) {
@@ -87,52 +100,87 @@ class GameDetailsFragment : Fragment() {
         scope.launch {
             try {
                 var listica = GamesRepository.getGamesByName(message)
-                favGames=AccountGamesRepository.getSavedGames()
-                for(i in listica){
-                    if(i.id==sharedViewModel.gameid.value)
-                        game=i
+                favGames = AccountGamesRepository.getSavedGames()
+                for (i in listica) {
+                    if (i.id == sharedViewModel.gameid.value)
+                        game = i
                 }
-                populateDetails()
+            //    populateDetails()
 
-                var userImpressionsList = game.userImpressions.sortedByDescending { it.timestamp }
+            //    var userImpressionsList = game.userImpressions.sortedByDescending { it.timestamp }
+                impressionsView = view.findViewById(R.id.reviews_list)
+                val layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                 impressionsView.layoutManager = layoutManager
+                impressionsAdapter = ImpressionsListAdapter(listOf())
+                impressionsView.adapter = impressionsAdapter
 
-                userImpressions = view.findViewById(R.id.reviews_list)
-                userImpressions.layoutManager = LinearLayoutManager(
-                    activity,
-                    LinearLayoutManager.VERTICAL,
-                    false
-                )
-
-                impressionsListAdapter = ImpressionsListAdapter(listOf())
-                userImpressions.adapter = impressionsListAdapter
-                impressionsListAdapter.updateImpressions(userImpressionsList)
-
-
-                for(i in favGames.indices){
-                    if(favGames[i].id == game.id) {
+                for (i in favGames.indices) {
+                    if (favGames[i].id == game.id) {
                         addButton.isEnabled = false
                     }
                 }
 
-                addButton.setOnClickListener {
-                    val scope = CoroutineScope( Dispatchers.IO)
-                    scope.launch {
-                        AccountGamesRepository.saveGame(game)
+                var impressionsFromServer = GameReviewsRepository.getReviewsForGame(game.id)
+                impressionsFromServer.forEach { gameReview ->
+                    addReview(gameReview)
+                }
+                impressions.sortedByDescending { it.timestamp }
+                impressionsAdapter.updateUserImpressions(impressions)
 
-                    }
-                    addButton.isEnabled = false
-                    removeButton.isEnabled = true
+
+                var rating: Int? = null;
+                ratingBarImpression.setOnRatingBarChangeListener { _, newRating, _ ->
+                    rating = newRating.toInt();
                 }
 
-                removeButton.setOnClickListener {
-                    val scope = CoroutineScope(Dispatchers.IO)
+                addImpression.setOnClickListener {
+                    val scope = CoroutineScope(Job() + Dispatchers.Main)
                     scope.launch {
-                        AccountGamesRepository.removeGame(game.id)
+                        var reviewText: String? = reviewEditText.text.toString()
+                        if (reviewText == "")
+                            reviewText = null
+
+                        var review = GameReview(
+                            rating,
+                            reviewText,
+                            game.id,
+                            true,
+                            "",
+                            System.currentTimeMillis().toString()
+                        )
+                        GameReviewsRepository.sendReview(
+                            requireContext(), review
+                        )
+
+
+                        addReview(review)
+                        impressionsAdapter.updateUserImpressions(impressions)
+                        populateDetails()
                     }
-                    addButton.isEnabled = true
-                    removeButton.isEnabled = false
                 }
-            } catch (e: Exception) {
+                populateDetails()
+
+                    addButton.setOnClickListener {
+                        val scope = CoroutineScope(Dispatchers.IO)
+                        scope.launch {
+                            AccountGamesRepository.saveGame(game)
+
+                        }
+                        addButton.isEnabled = false
+                        removeButton.isEnabled = true
+                    }
+
+                    removeButton.setOnClickListener {
+                        val scope = CoroutineScope(Dispatchers.IO)
+                        scope.launch {
+                            AccountGamesRepository.removeGame(game.id)
+                        }
+                        addButton.isEnabled = true
+                        removeButton.isEnabled = false
+                    }
+
+            }catch (e: Exception) {
                 // Handle any errors that occurred during the search
                 // Display an error message or perform appropriate error handling
             }
@@ -141,6 +189,22 @@ class GameDetailsFragment : Fragment() {
 
 
 
+    }
+
+    private fun addReview(gameReview: GameReview) {
+        if (gameReview.review != null && gameReview.review != "")
+            impressions += UserReview(
+                gameReview.student!!,
+                gameReview.timestamp!!.toLong(), gameReview.review!!
+            )
+        if (gameReview.rating != null)
+            impressions += UserRating(
+                gameReview.student!!,
+                gameReview.timestamp!!.toLong(),
+                gameReview.rating!!.toDouble()
+            )
+
+        impressions += game.userImpressions
     }
 
     private fun populateDetails() {
@@ -154,7 +218,7 @@ class GameDetailsFragment : Fragment() {
         description.text=game.description
         val imageUrl = game.coverImage
         Picasso.get().load("https:"+imageUrl).fit().into(img);
-
+        impressionsAdapter.updateUserImpressions(impressions)
 
     }
     @SuppressLint("SuspiciousIndentation")

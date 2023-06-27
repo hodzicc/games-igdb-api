@@ -54,8 +54,8 @@ class ImpressionsListAdapter(
             VIEW_TYPE_ONE
         } else VIEW_TYPE_TWO
     }
-    fun updateImpressions(list: List<UserImpression>) {
-        this.list = list
+    fun updateUserImpressions(userImpression: List<UserImpression>) {
+        this.list = userImpression
         notifyDataSetChanged()
     }
 }
