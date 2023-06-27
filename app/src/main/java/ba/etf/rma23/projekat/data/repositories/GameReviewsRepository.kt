@@ -121,9 +121,10 @@ object GameReviewsRepository {
             offlineReviews?.forEach { review ->
                 if(sendReview(context, review)) {
                     sentReviews++
+                    review.online=true
+
                 }
-                else
-                    db.gameReviewDao().insertAll(review)
+                db.gameReviewDao().insertAll(review)
             }
 
             return@withContext sentReviews
